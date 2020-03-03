@@ -50,16 +50,6 @@ function update(){
     leftBall.x += leftBall.vx;
     drawText("Right X: "+Math.round(rightBall.x)+" Right Vx: "+rightBall.vx, 0, 10, "White");
     drawText("Left X: "+Math.round(leftBall.x)+" Left Vx: "+leftBall.vx, 0, 20, "White");
-    // if( ball.y)
-    // if( ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0){
-    //     ball.velocityY = - ball.velocityY;
-    //     if( ball.y + ball.radius > canvas.height){
-    //         ball.y = canvas.height - ball.radius;
-    //     }
-    //     else{
-    //         ball.y = ball.radius;
-    //     }
-    // }
     if( rightBall.x + rightBall.radius > canvas.width || rightBall.x - rightBall.radius < 0){
         rightBall.vx = - rightBall.vx;
         if(rightBall.x + rightBall.radius > canvas.width){
@@ -76,11 +66,14 @@ function update(){
     //         ball.x = ball.radius;
     //     }
     // }
-    // let closeX = Math.sqrt((ball.x - user.x)*(ball.x - user.x))
+    let closeX = Math.sqrt((rightBall.x - leftBall.x)*(rightBall.x - leftBall.x))
     // let closeY = Math.sqrt((ball.y - user.y)*(ball.y - user.y))
     // let closeXY = Math.sqrt((closeX*closeX)+(closeY*closeY))
     // let ballv = Math.sqrt((ball.velocityX*ball.velocityX)+(ball.velocityY*ball.velocityY))
-    // if(closeXY <= 30){
+    if(closeX <= (rightBall.radius+leftBall.radius)){
+        rightBall.vx = leftBall.vx
+        leftBall.vx = rightBall.vx
+    }
     //     let theta = Math.atan((ball.x-user.x)/(ball.y-user.y))
     //     let isStatic = (user.static === true) ? user.v : 1
     //     console.log(isStatic + " static")

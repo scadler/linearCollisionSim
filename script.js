@@ -17,63 +17,58 @@ function drawText(text,x, y, color){
     context.font = "12px arial";
     context.fillText(text, x, y);
 }
-const rightBall = {
+const right = {
     x : canvas.width/3,
     y : canvas.height/2,
     radius : 15,
-    vx : 1,
+    vi : 0,
+    v : 0.5,
+    m: 2,
     color : "White",
 }
-const leftBall = {
+const left = {
     x : 2*canvas.width/3,
     y : canvas.height/2,
     radius : 15,
-    vx : 2,
+    vi : 0,
+    v : 0.5,
+    m: 1,
     color : "Red",
 }
-// function moveUser(event){
-   
-//     let rect = canvas.getBoundingClientRect();
-//     user.y = event.clientY - rect.top - user.radius/2;
-//     user.x = event.clientX - rect.top - user.radius/2;
-//     let directionX = (oldX > user.x) ? -1 : 1
-//     let directionY = (oldY > user.y) ? -1 : 1
-//     user.vx = directionX * Math.sqrt((oldX - user.x)*(oldX - user.x));
-//     user.vy = directionY * Math.sqrt((oldY - user.y)*(oldY - user.y));
-//     user.v = Math.sqrt((user.vx*user.vx)+(user.vy*user.vy))
-//     // console.log(user.v)
-//     // console.log(user.vx +" "+ oldX + "X")
-//     // console.log(user.vy +" "+ oldY + "Y")
-// }
 function update(){
-    rightBall.x += rightBall.vx;
-    leftBall.x += leftBall.vx;
-    drawText("Right X: "+Math.round(rightBall.x)+" Right Vx: "+rightBall.vx, 0, 10, "White");
-    drawText("Left X: "+Math.round(leftBall.x)+" Left Vx: "+leftBall.vx, 0, 20, "White");
-    if( rightBall.x + rightBall.radius > canvas.width || rightBall.x - rightBall.radius < 0){
-        rightBall.vx = - rightBall.vx;
-        if(rightBall.x + rightBall.radius > canvas.width){
-            rightBall.x = canvas.width - rightBall.radius;
+    right.vi = right.v
+    left.vi = left.v
+    right.x += right.v;
+    left.x += left.v;
+    drawText("Right X: "+Math.round(right.x)+" Right V: "+right.v.toFixed(3), 0, 10, "White");
+    drawText("Left X: "+Math.round(left.x)+" Left V: "+left.v.toFixed(3), 0, 20, "White");
+    if( right.x + right.radius > canvas.width || right.x - right.radius < 0){
+        right.v = - right.v;
+        if(right.x + right.radius > canvas.width){
+            right.x = canvas.width - right.radius;
         }
     }
-    if( leftBall.x + leftBall.radius > canvas.width || leftBall.x - leftBall.radius < 0){
-        leftBall.vx = - leftBall.vx;
-        if(leftBall.x + leftBall.radius > canvas.width){
-            leftBall.x = canvas.width - leftBall.radius;
+    if( left.x + left.radius > canvas.width || left.x - left.radius < 0){
+        left.v = - left.v;
+        if(left.x + left.radius > canvas.width){
+            left.x = canvas.width - left.radius;
         }
     }
     //     else{
     //         ball.x = ball.radius;
     //     }
     // }
-    let closeX = Math.sqrt((rightBall.x - leftBall.x)*(rightBall.x - leftBall.x))
+    let closeX = Math.sqrt((right.x - left.x)*(right.x - left.x))
     // let closeY = Math.sqrt((ball.y - user.y)*(ball.y - user.y))
     // let closeXY = Math.sqrt((closeX*closeX)+(closeY*closeY))
     // let ballv = Math.sqrt((ball.velocityX*ball.velocityX)+(ball.velocityY*ball.velocityY))
-    if(closeX <= (rightBall.radius+leftBall.radius)){
-        rightBall.vx = leftBall.vx
-        leftBall.vx = rightBall.vx
-    }
+    if(closeX <= (right.radius+left.radius)){
+        
+        // right.v = (((right.m - left.m)/(right.m + left.m)*right.v) + (((2*left.m)/(right.m + left.m))*left.v))
+        // left.v = (((2*right.m)/(right.m + left.m)*right.v) - (((right.m - left.m)/(right.m + left.m))*left.v))
+        right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
+        left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
+            }
     //     let theta = Math.atan((ball.x-user.x)/(ball.y-user.y))
     //     let isStatic = (user.static === true) ? user.v : 1
     //     console.log(isStatic + " static")
@@ -96,8 +91,8 @@ function update(){
 }
 function render(){
 drawRect(0, 0, canvas.width, canvas.height, "black");
-drawCircle(leftBall.x, leftBall.y, leftBall.radius, leftBall.color)
-drawCircle(rightBall.x, rightBall.y, rightBall.radius, rightBall.color)
+drawCircle(left.x, left.y, left.radius, left.color)
+drawCircle(right.x, right.y, right.radius, right.color)
 }
 function game(){
     render();

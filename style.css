@@ -1,6 +1,23 @@
-#redVRange{
-    width:200px;
+.range{
+    width:300px;
+    -webkit-appearance: none;
+    background-color: #d3d3d3;
+    height: 8px;
+    border-radius: 5px;
+    -webkit-transition: .2s;
+  transition: opacity .2s
 }
-#whiteVRange{
-    width:200px;
+/* #redVRange{
+    
+} */
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 18px;
+  /* border-radius: 50%;  */
+  background: grey;
+  border: 1px solid #555555;
+  cursor: pointer;
 }

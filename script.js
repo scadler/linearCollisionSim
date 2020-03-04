@@ -20,7 +20,7 @@ function drawText(text,x, y, color){
 const right = {
     x : canvas.width/3,
     y : canvas.height/2,
-    radius : 15,
+    radius : 19.54,
     vi : 0,
     v : 0.5,
     m: 3,
@@ -29,7 +29,7 @@ const right = {
 const left = {
     x : 2*canvas.width/3,
     y : canvas.height/2,
-    radius : 15,
+    radius : 11.28,
     vi : 0,
     v : -0.05,
     m: 1,
@@ -40,8 +40,8 @@ function update(){
     left.vi = left.v
     right.x += right.v;
     left.x += left.v;
-    drawText("Red:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(2)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(2)+" N", 0, 10, "White");
-    drawText("White:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(2)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(2)+" N", 0, 20, "White");
+    drawText("Red:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(3)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(3)+" N", 0, 10, "White");
+    drawText("White:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(3)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(3)+" N", 0, 20, "White");
     if( right.x + right.radius > canvas.width || right.x - right.radius < 0){
         right.v = - right.v;
         if(right.x + right.radius > canvas.width){
@@ -66,6 +66,8 @@ drawCircle(left.x, left.y, left.radius, left.color)
 drawCircle(right.x, right.y, right.radius, right.color)
 $("#redVRangeOutput").text($("#redVRange").val())
 $("#whiteVRangeOutput").text($("#whiteVRange").val())
+$("#redMRangeOutput").text($("#redMRange").val())
+$("#whiteMRangeOutput").text($("#whiteMRange").val())
 }
 function game(){
     render();
@@ -74,7 +76,13 @@ function game(){
 setInterval(game);
 $("#restart").click(function(){
     right.x = canvas.width/3
-    right.v = Number($("#redVRangeOutput").text())
     left.x = 2*canvas.width/3
+    right.v = Number($("#redVRangeOutput").text())
     left.v = Number($("#whiteVRangeOutput").text())
+    right.m = Number($("#redMRangeOutput").text())
+    left.m = Number($("#whiteMRangeOutput").text())
+    right.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
+    console.log(right.radius)
+    left.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
+    console.log(left.radius)
 })

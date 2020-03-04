@@ -1,4 +1,4 @@
-const canvas = document.getElementById("pong");
+const canvas = document.getElementById("plane");
 const context = canvas.getContext("2d");
 
 function drawCircle(x, y, r, color){
@@ -22,8 +22,8 @@ const right = {
     y : canvas.height/2,
     radius : 15,
     vi : 0,
-    v : 2,
-    m: 1,
+    v : 0.5,
+    m: 3,
     color : "White",
 }
 const left = {
@@ -31,7 +31,7 @@ const left = {
     y : canvas.height/2,
     radius : 15,
     vi : 0,
-    v : 0.5,
+    v : -0.05,
     m: 1,
     color : "Red",
 }
@@ -65,9 +65,16 @@ drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
 drawCircle(right.x, right.y, right.radius, right.color)
 $("#redVRangeOutput").text($("#redVRange").val())
+$("#whiteVRangeOutput").text($("#whiteVRange").val())
 }
 function game(){
     render();
     update();
 }
 setInterval(game);
+$("#restart").click(function(){
+    right.x = canvas.width/3
+    right.v = Number($("#redVRangeOutput").text())
+    left.x = 2*canvas.width/3
+    left.v = Number($("#whiteVRangeOutput").text())
+})

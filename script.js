@@ -77,12 +77,12 @@ setInterval(game);
 $("#restart").click(function(){
     right.x = canvas.width/3
     left.x = 2*canvas.width/3
-    right.v = Number($("#redVRangeOutput").text())
-    left.v = Number($("#whiteVRangeOutput").text())
-    right.m = Number($("#redMRangeOutput").text())
-    left.m = Number($("#whiteMRangeOutput").text())
-    right.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
+    right.v = Number($("#whiteVRangeOutput").text())
+    left.v = Number($("#redVRangeOutput").text())
+    right.m = Number($("#whiteMRangeOutput").text())
+    left.m = Number($("#redMRangeOutput").text())
+    right.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
     console.log(right.radius)
-    left.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
+    left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
     console.log(left.radius)
 })

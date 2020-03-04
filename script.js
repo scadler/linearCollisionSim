@@ -22,8 +22,8 @@ const right = {
     y : canvas.height/2,
     radius : 15,
     vi : 0,
-    v : 0.5,
-    m: 10,
+    v : 2,
+    m: 1,
     color : "White",
 }
 const left = {
@@ -58,12 +58,13 @@ function update(){
     if(closeX <= (right.radius+left.radius)){
         right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
         left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
-            }
+    }
 }
 function render(){
 drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
 drawCircle(right.x, right.y, right.radius, right.color)
+$("#redVRangeOutput").text($("#redVRange").val())
 }
 function game(){
     render();

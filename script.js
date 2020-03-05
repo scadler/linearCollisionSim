@@ -1,12 +1,22 @@
 const canvas = document.getElementById("plane");
 const context = canvas.getContext("2d");
 
+$(".blueP").hide();
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
     context.beginPath();
     context.arc(x, y, r, 0, Math.PI*2, false);
     context.closePath();
     context.fill();
+}
+function drawCircleBlue(x, y, r, color, check){
+    if(check === true){
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(x, y, r, 0, Math.PI*2, false);
+    context.closePath();
+    context.fill();
+    }
 }
 function drawRect(x, y, w, h, color){
     context.fillStyle = color;
@@ -21,6 +31,8 @@ const status = {
     elastic : true,
     collision : false,
     touchingWall : false,
+    blueCheck: false,
+    blue: false,
 }
 const left = {
     x : canvas.width/4,
@@ -85,15 +97,17 @@ function updateElastic(){
         right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
         left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
     }
-    let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
-    if(closeCL <= (center.radius+left.radius)){
-        center.v = (((center.vi*(center.m - left.m))/(center.m + left.m)) + (((2*left.m)/(center.m + left.m))*left.vi))
-        left.v = (((center.vi*(2*center.m))/(center.m + left.m)) + (((left.m - center.m)/(center.m + left.m))*left.vi))
-    }
-    let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
-    if(closeCR <= (center.radius+right.radius)){
-        center.v = (((center.vi*(center.m - right.m))/(center.m + right.m)) + (((2*right.m)/(center.m + right.m))*right.vi))
-        right.v = (((center.vi*(2*center.m))/(center.m + right.m)) + (((right.m - center.m)/(center.m + right.m))*right.vi))
+    if(status.blue === true){
+        let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
+        if(closeCL <= (center.radius+left.radius)){
+            center.v = (((center.vi*(center.m - left.m))/(center.m + left.m)) + (((2*left.m)/(center.m + left.m))*left.vi))
+            left.v = (((center.vi*(2*center.m))/(center.m + left.m)) + (((left.m - center.m)/(center.m + left.m))*left.vi))
+        }
+        let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
+        if(closeCR <= (center.radius+right.radius)){
+            center.v = (((center.vi*(center.m - right.m))/(center.m + right.m)) + (((2*right.m)/(center.m + right.m))*right.vi))
+            right.v = (((center.vi*(2*center.m))/(center.m + right.m)) + (((right.m - center.m)/(center.m + right.m))*right.vi))
+        }
     }
 }
 // function updateInelastic(){
@@ -147,7 +161,7 @@ function render(){
 drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
 drawCircle(right.x, right.y, right.radius, right.color)
-drawCircle(center.x, center.y, center.radius, center.color)
+drawCircleBlue(center.x, center.y, center.radius, center.color, status.blue)
 $("#redVRangeOutput").text($("#redVRange").val())
 $("#redMRangeOutput").text($("#redMRange").val())
 $("#blueVRangeOutput").text($("#blueVRange").val())
@@ -161,6 +175,7 @@ function game(){
 }
 setInterval(game,);
 $("#restart").click(function(){
+    status.blue = status.blueCheck
     right.x = 3*canvas.width/4
     center.x = canvas.width/2
     left.x = canvas.width/4
@@ -174,4 +189,25 @@ $("#restart").click(function(){
     center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
     left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
     console.log(center.radius)
+    if(status.blue === true){
+        $(".blueP").show();
+    }
+    else{
+        $(".blueP").hide();
+    }
 })
+var i = 0;
+$("#checkBlueParticle").click(function(){
+    
+    if(i%2 === 0){
+        $("#checkBlueParticle").css("background-color", "#2196F3")
+        $("#checkBlueParticle").css("border", "1px solid #cccccc")
+        status.blueCheck = true
+    }
+    else{
+        $("#checkBlueParticle").css("background-color", "#dddddd")
+        $("#checkBlueParticle").css("border", "1px solid #999999")
+        status.blueCheck = false
+    }
+    i++;
+});

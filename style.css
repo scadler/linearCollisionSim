@@ -1,6 +1,16 @@
 #settings{
     width:1000px;
 }
+.check{
+    border: 1px solid #999999;
+    border-radius: 2px;
+    height: 14px;
+    width: 14px;
+    background-color:#ddd;
+}
+#checkBlueParticle{
+    background-color:#ddd;
+}
 .range{
     width:400px;
     -webkit-appearance: none;

@@ -1,7 +1,6 @@
 const canvas = document.getElementById("plane");
 const context = canvas.getContext("2d");
 
-$(".blueP").hide();
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
     context.beginPath();
@@ -189,12 +188,6 @@ $("#restart").click(function(){
     center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
     left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
     console.log(center.radius)
-    if(status.blue === true){
-        $(".blueP").show();
-    }
-    else{
-        $(".blueP").hide();
-    }
 })
 var i = 0;
 $("#checkBlueParticle").click(function(){

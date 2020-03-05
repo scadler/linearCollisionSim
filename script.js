@@ -17,6 +17,11 @@ function drawText(text,x, y, color){
     context.font = "12px arial";
     context.fillText(text, x, y);
 }
+const status = {
+    elastic : true,
+    collision : false,
+    touchingWall : false,
+}
 const right = {
     x : canvas.width/3,
     y : canvas.height/2,
@@ -35,7 +40,7 @@ const left = {
     m: 1,
     color : "Red",
 }
-function update(){
+function updateElastic(){
     right.vi = right.v
     left.vi = left.v
     right.x += right.v;
@@ -60,6 +65,52 @@ function update(){
         left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
     }
 }
+function updateInelastic(){
+    right.vi = right.v
+    left.vi = left.v
+    right.x += right.v;
+    left.x += left.v;
+    if(right.x - left.x)
+    drawText("Red:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(3)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(3)+" N", 0, 10, "White");
+    drawText("White:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(3)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(3)+" N", 0, 20, "White");
+    if(status.collision === false){
+    if( right.x + right.radius > canvas.width || right.x - right.radius < 0){
+        right.v = - right.v;
+        if(right.x + right.radius > canvas.width){
+            right.x = canvas.width - right.radius;
+        }
+    }
+    if( left.x + left.radius > canvas.width || left.x - left.radius < 0){
+        left.v = - left.v;
+        if(left.x + left.radius > canvas.width){
+            left.x = canvas.width - left.radius;
+        }
+    }
+    let closeX = Math.sqrt((right.x - left.x)*(right.x - left.x))
+    if(closeX <= (right.radius+left.radius)){
+        status.collision = true;
+        right.v = ((right.m*right.v)+(left.m*left.v))/(right.m*left.m)
+        left.v = right.v
+    }
+}
+    else{
+        if(right.x - left.x < right.radius + left.radius){
+            right.x = left.x + right.radius + left.radius
+        }
+        if( right.x + right.radius > canvas.width || right.x - right.radius < 0 || eft.x + left.radius > canvas.width || left.x - left.radius < 0){
+            left.v = -left.v
+            right.v = - right.v
+            if(right.x + right.radius > canvas.width){
+                right.x = canvas.width - right.radius;
+                left.x = left.x - right.radius;
+            }
+            if(left.x + left.radius > canvas.width){
+                left.x = canvas.width - left.radius;
+                right.x = right.x - left.radius;
+         }
+    }
+}
+}
 function render(){
 drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
@@ -71,7 +122,12 @@ $("#whiteMRangeOutput").text($("#whiteMRange").val())
 }
 function game(){
     render();
-    update();
+    // if(status.elastic === true){
+    updateElastic();
+    // }
+    // else{
+    //     updateInelastic();
+    // }
 }
 setInterval(game);
 $("#restart").click(function(){

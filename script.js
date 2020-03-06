@@ -76,6 +76,8 @@ const status = {
     touchingWall : false,
     blueCheck: false,
     blue: false,
+    frictionCheck: false,
+    friction: false,
     xCoorClose: false,
     passCounter: 0
 }
@@ -107,9 +109,15 @@ const right = {
     color : "White",
 }
 function updateElastic(){
+    if(status.friction === true){
+        let frictionVal = Number($("#frictionRange").val())
+        // right.v = Math.sqrt(right.v-(2*frictionVal))
+        console.log(Math.sqrt((right.v*right.v)-(2*frictionVal)))
+    }else{
     right.vi = right.v
     left.vi = left.v
     center.vi = center.v
+    }
     right.x += right.v;
     left.x += left.v;
     center.x += center.v
@@ -163,6 +171,7 @@ $("#blueVRangeOutput").text($("#blueVRange").val())
 $("#blueMRangeOutput").text($("#blueMRange").val())
 $("#whiteVRangeOutput").text($("#whiteVRange").val())
 $("#whiteMRangeOutput").text($("#whiteMRange").val())
+$("#frictionRangeOutput").text($("#frictionRange").val())
 // checkXCoorSliders()
 }
 function game(){
@@ -175,6 +184,8 @@ setInterval(game,);
 $("#restart").click(function(){
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
+        status.friction = status.frictionCheck
+        console.log( status.friction)
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())
         left.x = Number($("#redXCoor").val())
@@ -199,6 +210,31 @@ function checkBlueParticleVal(){
     else{
         status.blueCheck = false
         $("#checkBlueParticleOutput").text("No")
+    }
+    i++;
+}
+function checkBlueParticleVal(){
+    if(Number($("#checkBlueParticle").val()) === 1){
+        status.blueCheck = true
+        $("#checkBlueParticleOutput").text("Yes ")
+    }
+    else{
+        status.blueCheck = false
+        $("#checkBlueParticleOutput").text("No ")
+    }
+    i++;
+}
+
+function checkFrictionVal(){
+    if(Number($("#checkFriction").val()) === 1){
+        status.frictionCheck = true
+        $("#checkFrictionOutput").text("Yes ")
+        $("#frictionSliders").show();
+    }
+    else{
+        status.frictionCheck = false
+        $("#checkFrictionOutput").text("No ")
+        $("#frictionSliders").show();
     }
     i++;
 }

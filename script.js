@@ -65,12 +65,6 @@ function checkXCoorSliders(){
         $("#whiteXCoor").css("background-color", "#d3d3d3")
         status.passCounter = status.passCounter + 1;
     }
-    // if(closeWR === false && closeBR === false && closeBW === false && rx >= (0+rr+3) && rx <= (canvas.width-rr-3)  && bx < (0+br+3) && bx > (canvas.width-br-3) || wx < (0+wr+3) || wx > (canvas.width-wr-3)){
-    //     status.xCoorClose = false
-    // }
-    // else{
-    //     status.xCoorClose = true
-    // }
     if(status.passCounter === 3){
         status.passCounter = 0;
         status.xCoorClose = false;
@@ -119,9 +113,9 @@ function updateElastic(){
     right.x += right.v;
     left.x += left.v;
     center.x += center.v
-    drawText("Red:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(3)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(4)+" N", 0, 10, "White");
+    drawText("White:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(3)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(4)+" N", 0, 10, "White");
     drawText("Blue   m: "+center.m.toFixed(2)+" kg, v: "+center.v.toFixed(3)+" m/s, KE: "+(1/2*center.m*(center.v*center.v)).toFixed(4)+" N", 0, 30, "White");
-    drawText("White:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(3)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(4)+" N", 0, 20, "White");
+    drawText("Red:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(3)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(4)+" N", 0, 20, "White");
     if( right.x + right.radius > canvas.width || right.x - right.radius < 0){
         right.v = - right.v;
         if(right.x + right.radius > canvas.width){

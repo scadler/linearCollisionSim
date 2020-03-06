@@ -9,8 +9,11 @@
         </div>
         
         <button id="restart">Calculate</button>
-        <div id="settings">
-            <p id="checkboxP"> <div class="check" id="checkBlueParticle"> </div> Allow Blue Particle</input></p>
+        <div id="settings" onmousemove="checkXCoorSliders()">
+            <p> <input class="switch" onmousemove="checkBlueParticleVal()" id="checkBlueParticle" type="range" min="0" max="1" step="1" value="0">Allow Blue Particle: </input><span id="checkBlueParticleOutput">No</span> </p>
+            <p> <input class="position" id="redXCoor" type="range" min="0" max="1000" step="1" value="250"></input> </p>
+            <p> <input class="position" id="blueXCoor" type="range" min="0" max="1000" step="1" value="500"></input> </p>
+            <p> <input class="position" id="whiteXCoor" type="range" min="0" max="1000" step="1" value="750"></input> </p>
             <p> <input class="range" id="redVRange" type="range" min="-5" max="5" step="0.05" value="0.5"> Red Velocity: <span id="redVRangeOutput">0.5</span> m/s</input> </p>
             <p> <input class="range" id="redMRange" type="range" min="0.05" max="10" step="0.05" value="3"> Red Mass: <span id="redMRangeOutput">3</span> kg</input> </p>
             <p> <input class="range" id="blueVRange" type="range" min="-5" max="5" step="0.05" value="0"> Blue Velocity: <span id="blueVRangeOutput">0</span> m/s</input> </p>

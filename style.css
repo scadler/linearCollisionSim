@@ -11,6 +11,22 @@
 #checkBlueParticle{
     background-color:#ddd;
 }
+.switch{
+    width:50px;
+    -webkit-appearance: none;
+    background-color: #d3d3d3;
+    height: 8px;
+    border-radius: 5px;
+}
+.switch::-webkit-slider-thumb{
+   -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 18px;
+  background: grey;
+  border: 1px solid #555555;
+  cursor: pointer;
+}
 .range{
     width:400px;
     -webkit-appearance: none;
@@ -26,4 +42,29 @@
   background: grey;
   border: 1px solid #555555;
   cursor: pointer;
+}
+.position{
+    width:1000px;
+    -webkit-appearance: none;
+    background-color: #d3d3d3;
+    height: 3px;
+    border-radius: 5px;
+}
+.position::-webkit-slider-thumb{
+    -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius:50%;
+  border: 1px solid #555555;
+  cursor: pointer;
+}
+#redXCoor::-webkit-slider-thumb{
+    background-color: red;
+}
+#blueXCoor::-webkit-slider-thumb{
+    background-color: blue;
+}
+#whiteXCoor::-webkit-slider-thumb{
+    background-color: white;
 }

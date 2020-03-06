@@ -26,12 +26,52 @@ function drawText(text,x, y, color){
     context.font = "12px arial";
     context.fillText(text, x, y);
 }
+function checkXCoorSliders(){ 
+    let wx = Number($("#whiteXCoor").val())
+    let bx = Number($("#blueXCoor").val())
+    let rx = Number($("#redXCoor").val())
+    let wr = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
+    let br = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
+    let rr = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
+    let closeWR = (Math.sqrt((wx-rx)*(wx-rx)) < (rr + wr + 10)) ? true : false
+    let closeBR = (Math.sqrt((bx-rx)*(bx-rx)) < (rr + br + 10)) ? true : false
+    let closeBW = (Math.sqrt((bx-wx)*(bx-wx)) < (wr + br + 10)) ? true : false
+    if(status.blueCheck === false){
+        closeBR = false
+        closeBW = false
+    }
+    if(closeBR === true || closeWR === true) {
+        $("#redXCoor").css("background-color", "#ff5050")
+    }
+    else if(closeBR === false && closeWR === false ){
+        $("#redXCoor").css("background-color", "#d3d3d3")
+    }
+    if(closeBR === true || closeBW === true){
+        $("#blueXCoor").css("background-color", "#ff5050")
+    }
+    else if(closeBR === false && closeBW === false){
+        $("#blueXCoor").css("background-color", "#d3d3d3")
+    }
+    if(closeWR === true || closeBW === true){  
+        $("#whiteXCoor").css("background-color", "#ff5050")
+    }
+    else if(closeWR === false && closeBW === false){
+        $("#whiteXCoor").css("background-color", "#d3d3d3")
+    }
+    if(closeWR === false && closeBR === false && closeBW === false){
+        xCoorClose = false
+    }
+    else{
+        xCoorClose = true
+    }
+}
 const status = {
     elastic : true,
     collision : false,
     touchingWall : false,
     blueCheck: false,
     blue: false,
+    xCoorClose: false,
 }
 const left = {
     x : canvas.width/4,
@@ -42,7 +82,6 @@ const left = {
     m: 3,
     color : "Red",
 }
-
 const center = {
     x : canvas.width/2,
     y : canvas.height/2,
@@ -61,7 +100,6 @@ const right = {
     m: 1,
     color : "White",
 }
-
 function updateElastic(){
     right.vi = right.v
     left.vi = left.v
@@ -72,7 +110,6 @@ function updateElastic(){
     drawText("Red:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(3)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(3)+" N", 0, 10, "White");
     drawText("Blue   m: "+center.m.toFixed(2)+" kg, v: "+center.v.toFixed(3)+" m/s, KE: "+(1/2*center.m*(center.v*center.v)).toFixed(3)+" N", 0, 30, "White");
     drawText("White:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(3)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(3)+" N", 0, 20, "White");
-    
     if( right.x + right.radius > canvas.width || right.x - right.radius < 0){
         right.v = - right.v;
         if(right.x + right.radius > canvas.width){
@@ -109,53 +146,6 @@ function updateElastic(){
         }
     }
 }
-// function updateInelastic(){
-//     right.vi = right.v
-//     left.vi = left.v
-//     right.x += right.v;
-//     left.x += left.v;
-//     if(right.x - left.x)
-//     drawText("Red:     m: "+right.m.toFixed(2)+" kg, v: "+right.v.toFixed(3)+" m/s, KE: "+(1/2*right.m*(right.v*right.v)).toFixed(3)+" N", 0, 10, "White");
-//     drawText("White:   m: "+left.m.toFixed(2)+" kg, v: "+left.v.toFixed(3)+" m/s, KE: "+(1/2*left.m*(left.v*left.v)).toFixed(3)+" N", 0, 20, "White");
-//     drawText("Blue   m: "+center.m.toFixed(2)+" kg, v: "+center.v.toFixed(3)+" m/s, KE: "+(1/2*center.m*(center.v*center.v)).toFixed(3)+" N", 0, 30, "White");
-//     if(status.collision === false){
-//     if( right.x + right.radius > canvas.width || right.x - right.radius < 0){
-//         right.v = - right.v;
-//         if(right.x + right.radius > canvas.width){
-//             right.x = canvas.width - right.radius;
-//         }
-//     }
-//     if( left.x + left.radius > canvas.width || left.x - left.radius < 0){
-//         left.v = - left.v;
-//         if(left.x + left.radius > canvas.width){
-//             left.x = canvas.width - left.radius;
-//         }
-//     }
-//     let closeX = Math.sqrt((right.x - left.x)*(right.x - left.x))
-//     if(closeX <= (right.radius+left.radius)){
-//         status.collision = true;
-//         right.v = ((right.m*right.v)+(left.m*left.v))/(right.m*left.m)
-//         left.v = right.v
-//     }
-// }
-//     else{
-//         if(right.x - left.x < right.radius + left.radius){
-//             right.x = left.x + right.radius + left.radius
-//         }
-//         if( right.x + right.radius > canvas.width || right.x - right.radius < 0 || eft.x + left.radius > canvas.width || left.x - left.radius < 0){
-//             left.v = -left.v
-//             right.v = - right.v
-//             if(right.x + right.radius > canvas.width){
-//                 right.x = canvas.width - right.radius;
-//                 left.x = left.x - right.radius;
-//             }
-//             if(left.x + left.radius > canvas.width){
-//                 left.x = canvas.width - left.radius;
-//                 right.x = right.x - left.radius;
-//          }
-//     }
-// }
-// }
 function render(){
 drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
@@ -167,40 +157,42 @@ $("#blueVRangeOutput").text($("#blueVRange").val())
 $("#blueMRangeOutput").text($("#blueMRange").val())
 $("#whiteVRangeOutput").text($("#whiteVRange").val())
 $("#whiteMRangeOutput").text($("#whiteMRange").val())
+// checkXCoorSliders()
 }
 function game(){
     render();
     updateElastic();
 }
+document.addEventListener("mousemove",checkXCoorSliders());
+document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
 $("#restart").click(function(){
-    status.blue = status.blueCheck
-    right.x = 3*canvas.width/4
-    center.x = canvas.width/2
-    left.x = canvas.width/4
-    right.v = Number($("#whiteVRangeOutput").text())
-    right.m = Number($("#whiteMRangeOutput").text())
-    center.v = Number($("#blueVRangeOutput").text())
-    center.m = Number($("#blueMRangeOutput").text())
-    left.v = Number($("#redVRangeOutput").text())
-    left.m = Number($("#redMRangeOutput").text())
-    right.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
-    center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
-    left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
-    console.log(center.radius)
+    if(xCoorClose === false){
+        status.blue = status.blueCheck
+        right.x = Number($("#whiteXCoor").val())
+        center.x = Number($("#blueXCoor").val())
+        left.x = Number($("#redXCoor").val())
+        right.v = Number($("#whiteVRangeOutput").text())
+        right.m = Number($("#whiteMRangeOutput").text())
+        center.v = Number($("#blueVRangeOutput").text())
+        center.m = Number($("#blueMRangeOutput").text())
+        left.v = Number($("#redVRangeOutput").text())
+        left.m = Number($("#redMRangeOutput").text())
+        right.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
+        center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
+        left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
+        console.log(center.radius)
+    }
 })
 var i = 0;
-$("#checkBlueParticle").click(function(){
-    
-    if(i%2 === 0){
-        $("#checkBlueParticle").css("background-color", "#2196F3")
-        $("#checkBlueParticle").css("border", "1px solid #cccccc")
+function checkBlueParticleVal(){
+    if(Number($("#checkBlueParticle").val()) === 1){
         status.blueCheck = true
+        $("#checkBlueParticleOutput").text("Yes")
     }
     else{
-        $("#checkBlueParticle").css("background-color", "#dddddd")
-        $("#checkBlueParticle").css("border", "1px solid #999999")
         status.blueCheck = false
+        $("#checkBlueParticleOutput").text("No")
     }
     i++;
-});
+}

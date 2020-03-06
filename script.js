@@ -185,7 +185,6 @@ $("#restart").click(function(){
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
         status.friction = status.frictionCheck
-        console.log( status.friction)
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())
         left.x = Number($("#redXCoor").val())
@@ -198,7 +197,6 @@ $("#restart").click(function(){
         right.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
         center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
         left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
-        console.log(center.radius)
     }
 })
 var i = 0;

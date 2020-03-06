@@ -40,25 +40,25 @@ function checkXCoorSliders(){
         closeBR = false
         closeBW = false
     }
-    if(closeBR === true || closeWR === true) {
+    if(closeBR === true || closeWR === true || rx < (0+rr+3) || rx > (canvas.width-rr-3)) {
         $("#redXCoor").css("background-color", "#ff5050")
     }
     else if(closeBR === false && closeWR === false ){
         $("#redXCoor").css("background-color", "#d3d3d3")
     }
-    if(closeBR === true || closeBW === true){
+    if(closeBR === true || closeBW === true || bx < (0+br+3) || bx > (canvas.width-br-3)){
         $("#blueXCoor").css("background-color", "#ff5050")
     }
     else if(closeBR === false && closeBW === false){
         $("#blueXCoor").css("background-color", "#d3d3d3")
     }
-    if(closeWR === true || closeBW === true){  
+    if(closeWR === true || closeBW === true || wx < (0+wr+3) || wx > (canvas.width-wr-3)){  
         $("#whiteXCoor").css("background-color", "#ff5050")
     }
     else if(closeWR === false && closeBW === false){
         $("#whiteXCoor").css("background-color", "#d3d3d3")
     }
-    if(closeWR === false && closeBR === false && closeBW === false){
+    if(closeWR === false && closeBR === false && closeBW === false && rx >= (0+rr+3) && rx <= (canvas.width-rr-3)  && bx < (0+br+3) && bx > (canvas.width-br-3) || wx < (0+wr+3) || wx > (canvas.width-wr-3)){
         xCoorClose = false
     }
     else{
@@ -167,7 +167,7 @@ document.addEventListener("mousemove",checkXCoorSliders());
 document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
 $("#restart").click(function(){
-    if(xCoorClose === false){
+    if(status.xCoorClose === false){
         status.blue = status.blueCheck
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())

@@ -1,6 +1,15 @@
 #settings{
     width:1000px;
 }
+#restart{
+    background-color:#fdfdfd;
+    border-radius:3px;
+}
+#restart:hover {
+  background-color: #dfdfdf;
+  -webkit-transition-duration: 0.5s;
+    transition-duration: 0.3s;
+}
 .check{
     border: 1px solid #999999;
     border-radius: 2px;

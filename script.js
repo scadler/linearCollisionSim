@@ -76,7 +76,6 @@ const status = {
     touchingWall : false,
     blueCheck: false,
     blue: false,
-    frictionCheck: false,
     friction: false,
     xCoorClose: false,
     passCounter: 0
@@ -109,17 +108,15 @@ const right = {
     color : "White",
 }
 function updateElastic(){
-    let leftDirection = (left.v > 0) ? 1 : -1
-    //this works! 
+    let leftDirection = (left.v > 0) ? 1 : -1 
+    let rightDirection = (right.v > 0) ? 1 : -1 
+    let centerDirection = (center.v > 0) ? 1 : -1 
     left.v = (Math.pow(leftDirection*Math.sqrt((left.v*left.v)-(leftDirection*2*Number($("#frictionRangeOutput").text())*9.8*left.v)),2) > 0) ? leftDirection*Math.sqrt((left.v*left.v)-(leftDirection*2*Number($("#frictionRangeOutput").text())*9.8*left.v)) : 0
+    right.v = (Math.pow(rightDirection*Math.sqrt((right.v*right.v)-(rightDirection*2*Number($("#frictionRangeOutput").text())*9.8*right.v)),2) > 0) ? rightDirection*Math.sqrt((right.v*right.v)-(rightDirection*2*Number($("#frictionRangeOutput").text())*9.8*right.v)) : 0
+    center.v = (Math.pow(centerDirection*Math.sqrt((center.v*center.v)-(centerDirection*2*Number($("#frictionRangeOutput").text())*9.8*center.v)),2) > 0) ? centerDirection*Math.sqrt((center.v*center.v)-(centerDirection*2*Number($("#frictionRangeOutput").text())*9.8*center.v)) : 0
     right.vi = right.v
     left.vi = left.v
     center.vi = center.v
-    // if(status.friction === true){
-    //     let frictionVal = Number($("#frictionRangeOutput").text())
-    //     console.log(frictionVal)
-    //     right.vi = Math.sqrt((right.v))
-    // }
     right.x += right.v;
     left.x += left.v;
     center.x += center.v
@@ -174,7 +171,6 @@ $("#blueMRangeOutput").text($("#blueMRange").val())
 $("#whiteVRangeOutput").text($("#whiteVRange").val())
 $("#whiteMRangeOutput").text($("#whiteMRange").val())
 $("#frictionRangeOutput").text($("#frictionRange").val())
-// checkXCoorSliders()
 }
 function game(){
     render();
@@ -186,7 +182,6 @@ setInterval(game,);
 $("#restart").click(function(){
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
-        status.friction = status.frictionCheck
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())
         left.x = Number($("#redXCoor").val())
@@ -221,20 +216,6 @@ function checkBlueParticleVal(){
     else{
         status.blueCheck = false
         $("#checkBlueParticleOutput").text("No ")
-    }
-    i++;
-}
-
-function checkFrictionVal(){
-    if(Number($("#checkFriction").val()) === 1){
-        status.frictionCheck = true
-        $("#checkFrictionOutput").text("Yes ")
-        $("#frictionSliders").show();
-    }
-    else{
-        status.frictionCheck = false
-        $("#checkFrictionOutput").text("No ")
-        $("#frictionSliders").show();
     }
     i++;
 }

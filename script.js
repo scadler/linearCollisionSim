@@ -109,14 +109,16 @@ const right = {
     color : "White",
 }
 function updateElastic(){
-    // if(status.friction === true &&  Number($("#frictionRange").val()) !== 0 ){
-    //     let frictionVal = Number($("#frictionRange").val())
-    //     // right.v = Math.sqrt(right.v-(2*frictionVal))
-    //     console.log((right.v*right.v)-(2*frictionVal*right.v))
-    // }else{
+    let leftDirection = (left.v > 0) ? 1 : -1
+    //this works! 
+    left.v = (Math.pow(leftDirection*Math.sqrt((left.v*left.v)-(leftDirection*2*Number($("#frictionRangeOutput").text())*9.8*left.v)),2) > 0) ? leftDirection*Math.sqrt((left.v*left.v)-(leftDirection*2*Number($("#frictionRangeOutput").text())*9.8*left.v)) : 0
     right.vi = right.v
     left.vi = left.v
     center.vi = center.v
+    // if(status.friction === true){
+    //     let frictionVal = Number($("#frictionRangeOutput").text())
+    //     console.log(frictionVal)
+    //     right.vi = Math.sqrt((right.v))
     // }
     right.x += right.v;
     left.x += left.v;

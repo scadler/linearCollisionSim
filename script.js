@@ -42,7 +42,7 @@ function checkXCoorSliders(){
         closeBW = false
     }
     if(closeBR === true || closeWR === true || rx < (0+rr+3) || rx > (canvas.width-rr-3)) {
-        $("#redXCoor").css("background-color", "#ff5050")
+        $("#redXCoor").css("background-color", "#ff8888")
         status.xCoorClose = true
     }
     else if(closeBR === false && closeWR === false ){
@@ -50,7 +50,7 @@ function checkXCoorSliders(){
         status.passCounter = status.passCounter + 1;
     }
     if(closeBR === true || closeBW === true || bx < (0+br+3) || bx > (canvas.width-br-3)){
-        $("#blueXCoor").css("background-color", "#ff5050")
+        $("#blueXCoor").css("background-color", "#ff8888")
         status.xCoorClose = true
     }
     else if(closeBR === false && closeBW === false){
@@ -58,7 +58,7 @@ function checkXCoorSliders(){
         status.passCounter = status.passCounter + 1;
     }
     if(closeWR === true || closeBW === true || wx < (0+wr+3) || wx > (canvas.width-wr-3)){  
-        $("#whiteXCoor").css("background-color", "#ff5050")
+        $("#whiteXCoor").css("background-color", "#ff8888")
         status.xCoorClose = true
     }
     else if(closeWR === false && closeBW === false){
@@ -180,6 +180,7 @@ document.addEventListener("mousemove",checkXCoorSliders());
 document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
 $("#restart").click(function(){
+    checkXCoorSliders()
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
         right.x = Number($("#whiteXCoor").val())

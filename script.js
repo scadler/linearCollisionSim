@@ -107,6 +107,27 @@ const right = {
     m: 1,
     color : "White",
 }
+function updateText(){
+    $("#redVRangeOutput").text($("#redVRange").val())
+    $("#redMRangeOutput").text($("#redMRange").val())
+    $("#blueVRangeOutput").text($("#blueVRange").val())
+    $("#blueMRangeOutput").text($("#blueMRange").val())
+    $("#whiteVRangeOutput").text($("#whiteVRange").val())
+    $("#whiteMRangeOutput").text($("#whiteMRange").val())
+    $("#frictionRangeOutput").text($("#frictionRange").val())
+    $("#redMOutput").text(left.m.toFixed(2))
+    $("#redVOutput").text(left.v.toFixed(3))
+    $("#redKEOutput").text((0.5*left.m*(left.v*left.v)).toFixed(4))
+    $("#redMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*left.m).toFixed(7))
+    $("#whiteMOutput").text(right.m.toFixed(2))
+    $("#whiteVOutput").text(right.v.toFixed(3))
+    $("#whiteKEOutput").text((0.5*right.m*(right.v*right.v)).toFixed(4))
+    $("#whiteMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*right.m).toFixed(7))
+    $("#blueMOutput").text(center.m.toFixed(2))
+    $("#blueVOutput").text(center.v.toFixed(3))
+    $("#blueKEOutput").text((0.5*center.m*(center.v*center.v)).toFixed(4))
+    $("#blueMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*center.m).toFixed(7))
+}
 function updateElastic(){
     let leftDirection = (left.v > 0) ? 1 : -1 
     let rightDirection = (right.v > 0) ? 1 : -1 
@@ -164,13 +185,7 @@ drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
 drawCircle(right.x, right.y, right.radius, right.color)
 drawCircleBlue(center.x, center.y, center.radius, center.color, status.blue)
-$("#redVRangeOutput").text($("#redVRange").val())
-$("#redMRangeOutput").text($("#redMRange").val())
-$("#blueVRangeOutput").text($("#blueVRange").val())
-$("#blueMRangeOutput").text($("#blueMRange").val())
-$("#whiteVRangeOutput").text($("#whiteVRange").val())
-$("#whiteMRangeOutput").text($("#whiteMRange").val())
-$("#frictionRangeOutput").text($("#frictionRange").val())
+updateText()
 }
 function game(){
     render();
@@ -179,7 +194,7 @@ function game(){
 document.addEventListener("mousemove",checkXCoorSliders());
 document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
-$("#restart").click(function(){s
+$("#restart").click(function(){
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
         right.x = Number($("#whiteXCoor").val())

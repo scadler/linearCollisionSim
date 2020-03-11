@@ -93,3 +93,24 @@
 #whiteXCoor::-webkit-slider-thumb{
     background-color: white;
 }
+#rightDiv{
+    float: left;
+}
+#leftDiv{
+    float: left;
+}
+.grid{
+    width:80px;
+    height:40px;
+    border: 1px solid #d3d3d3;
+    float: left;
+    justify-content: center;
+}
+.text{
+    text-align: center;
+}
+.gridBlank{
+    width:82px;
+    height:40px;
+     float: left;
+}

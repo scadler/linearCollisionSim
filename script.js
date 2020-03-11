@@ -179,8 +179,7 @@ function game(){
 document.addEventListener("mousemove",checkXCoorSliders());
 document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
-$("#restart").click(function(){
-    checkXCoorSliders()
+$("#restart").click(function(){s
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
         right.x = Number($("#whiteXCoor").val())
@@ -212,11 +211,13 @@ function checkBlueParticleVal(){
 function checkBlueParticleVal(){
     if(Number($("#checkBlueParticle").val()) === 1){
         status.blueCheck = true
-        $("#checkBlueParticleOutput").text("Yes ")
+        $("#checkBlueParticleOutput").text("Yes")
+            checkXCoorSliders()
     }
     else{
         status.blueCheck = false
-        $("#checkBlueParticleOutput").text("No ")
+        $("#checkBlueParticleOutput").text("No")
+            checkXCoorSliders()
     }
     i++;
 }

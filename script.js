@@ -90,6 +90,7 @@ const left = {
     v : 0.5,
     m: 3,
     color : "Red",
+    a : 0,
 }
 const center = {
     x : canvas.width/2,
@@ -99,6 +100,7 @@ const center = {
     v : 0,
     m: 5,
     color : "Blue",
+    a : 0,
 }
 const right = {
     x : 3*canvas.width/4,
@@ -108,6 +110,7 @@ const right = {
     v : -0.05,
     m: 1,
     color : "White",
+    a : 0,
 }
 function updateText(){
     $("#redVRangeOutput").text($("#redVRange").val())
@@ -120,19 +123,19 @@ function updateText(){
     $("#redMOutput").text(left.m.toFixed(2))
     $("#redVOutput").text(left.v.toFixed(3))
     $("#redKEOutput").text((0.5*left.m*(left.v*left.v)).toFixed(4))
-    $("#redMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*left.m).toFixed(7))
+    $("#redPOutput").text((left.a*100).toFixed(4))
     $("#whiteMOutput").text(right.m.toFixed(2))
     $("#whiteVOutput").text(right.v.toFixed(3))
     $("#whiteKEOutput").text((0.5*right.m*(right.v*right.v)).toFixed(4))
-    $("#whiteMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*right.m).toFixed(7))
+    $("#whitePOutput").text(right.a*100)
     $("#blueMOutput").text(status.blueMultiplier*center.m.toFixed(2))
     $("#blueVOutput").text(status.blueMultiplier*center.v.toFixed(3))
     $("#blueKEOutput").text(status.blueMultiplier*(0.5*center.m*(center.v*center.v)).toFixed(4))
-    $("#blueMUkOutput").text(status.blueMultiplier*(Number($("#frictionRangeOutput").text())*9.8*center.m).toFixed(7))
+    $("#bluePOutput").text(status.blueMultiplier*center.a*100)
     $("#netMOutput").text((Number($("#redMOutput").text())+Number($("#blueMOutput").text())+Number($("#whiteMOutput").text())).toFixed(2))
     $("#netVOutput").text((Number($("#redVOutput").text())+Number($("#blueVOutput").text())+Number($("#whiteVOutput").text())).toFixed(3))
     $("#netKEOutput").text((Number($("#redKEOutput").text())+Number($("#blueKEOutput").text())+Number($("#whiteKEOutput").text())).toFixed(4))
-    $("#netMUkOutput").text((Number($("#redMUkOutput").text())+Number($("#blueMUkOutput").text())+Number($("#whiteMUkOutput").text())).toFixed(7))
+    $("#netPOutput").text((Number($("#redPOutput").text())+Number($("#bluePOutput").text())+Number($("#whitePOutput").text())).toFixed(4))
 }
 function updateElastic(){
     let leftDirection = (left.v > 0) ? 1 : -1 
@@ -141,6 +144,9 @@ function updateElastic(){
     left.v = (Math.pow(leftDirection*Math.sqrt((left.v*left.v)-(leftDirection*2*Number($("#frictionRangeOutput").text())*9.8*left.v)),2) > 0) ? leftDirection*Math.sqrt((left.v*left.v)-(leftDirection*2*Number($("#frictionRangeOutput").text())*9.8*left.v)) : 0
     right.v = (Math.pow(rightDirection*Math.sqrt((right.v*right.v)-(rightDirection*2*Number($("#frictionRangeOutput").text())*9.8*right.v)),2) > 0) ? rightDirection*Math.sqrt((right.v*right.v)-(rightDirection*2*Number($("#frictionRangeOutput").text())*9.8*right.v)) : 0
     center.v = (Math.pow(centerDirection*Math.sqrt((center.v*center.v)-(centerDirection*2*Number($("#frictionRangeOutput").text())*9.8*center.v)),2) > 0) ? centerDirection*Math.sqrt((center.v*center.v)-(centerDirection*2*Number($("#frictionRangeOutput").text())*9.8*center.v)) : 0
+    right.a = right.vi - right.v
+    left.a = left.vi - left.v
+    center.a = center.vi - center.v
     right.vi = right.v
     left.vi = left.v
     center.vi = center.v

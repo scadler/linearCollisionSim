@@ -129,6 +129,10 @@ function updateText(){
     $("#blueVOutput").text(status.blueMultiplier*center.v.toFixed(3))
     $("#blueKEOutput").text(status.blueMultiplier*(0.5*center.m*(center.v*center.v)).toFixed(4))
     $("#blueMUkOutput").text(status.blueMultiplier*(Number($("#frictionRangeOutput").text())*9.8*center.m).toFixed(7))
+    $("#netMOutput").text((Number($("#redMOutput").text())+Number($("#blueMOutput").text())+Number($("#whiteMOutput").text())).toFixed(2))
+    $("#netVOutput").text((Number($("#redVOutput").text())+Number($("#blueVOutput").text())+Number($("#whiteVOutput").text())).toFixed(3))
+    $("#netKEOutput").text((Number($("#redKEOutput").text())+Number($("#blueKEOutput").text())+Number($("#whiteKEOutput").text())).toFixed(4))
+    $("#netMUkOutput").text((Number($("#redMUkOutput").text())+Number($("#blueMUkOutput").text())+Number($("#whiteMUkOutput").text())).toFixed(7))
 }
 function updateElastic(){
     let leftDirection = (left.v > 0) ? 1 : -1 

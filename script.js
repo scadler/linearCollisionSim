@@ -1,6 +1,18 @@
 const canvas = document.getElementById("plane");
 const context = canvas.getContext("2d");
 //comment
+const status = {
+    elastic : true,
+    collision : false,
+    touchingWall : false,
+    blueCheck: false,
+    blue: false,
+    friction: false,
+    xCoorClose: false,
+    passCounter: 0,
+    blueMultiplierCheck : 0,
+    blueMultiplier : 0,
+}
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
     context.beginPath();
@@ -70,16 +82,6 @@ function checkXCoorSliders(){
         status.xCoorClose = false;
     }
 }
-const status = {
-    elastic : true,
-    collision : false,
-    touchingWall : false,
-    blueCheck: false,
-    blue: false,
-    friction: false,
-    xCoorClose: false,
-    passCounter: 0
-}
 const left = {
     x : canvas.width/4,
     y : canvas.height/2,
@@ -123,10 +125,10 @@ function updateText(){
     $("#whiteVOutput").text(right.v.toFixed(3))
     $("#whiteKEOutput").text((0.5*right.m*(right.v*right.v)).toFixed(4))
     $("#whiteMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*right.m).toFixed(7))
-    $("#blueMOutput").text(center.m.toFixed(2))
-    $("#blueVOutput").text(center.v.toFixed(3))
-    $("#blueKEOutput").text((0.5*center.m*(center.v*center.v)).toFixed(4))
-    $("#blueMUkOutput").text((Number($("#frictionRangeOutput").text())*9.8*center.m).toFixed(7))
+    $("#blueMOutput").text(status.blueMultiplier*center.m.toFixed(2))
+    $("#blueVOutput").text(status.blueMultiplier*center.v.toFixed(3))
+    $("#blueKEOutput").text(status.blueMultiplier*(0.5*center.m*(center.v*center.v)).toFixed(4))
+    $("#blueMUkOutput").text(status.blueMultiplier*(Number($("#frictionRangeOutput").text())*9.8*center.m).toFixed(7))
 }
 function updateElastic(){
     let leftDirection = (left.v > 0) ? 1 : -1 
@@ -197,6 +199,7 @@ setInterval(game,);
 $("#restart").click(function(){
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
+        status.blueMultiplier = status.blueMultiplierCheck
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())
         left.x = Number($("#redXCoor").val())
@@ -226,6 +229,7 @@ function checkBlueParticleVal(){
 function checkBlueParticleVal(){
     if(Number($("#checkBlueParticle").val()) === 1){
         status.blueCheck = true
+        status.blueMultiplierCheck = 1
         $("#checkBlueParticleOutput").text("Yes")
             checkXCoorSliders()
     }
@@ -233,6 +237,7 @@ function checkBlueParticleVal(){
         status.blueCheck = false
         $("#checkBlueParticleOutput").text("No")
             checkXCoorSliders()
+            status.blueMultiplierCheck = 0;
     }
     i++;
 }

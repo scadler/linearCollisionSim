@@ -50,7 +50,23 @@
     height: 8px;
     border-radius: 5px;
 }
+.CORRange{
+    width:400px;
+    -webkit-appearance: none;
+    background-color: #d3d3d3;
+    height: 8px;
+    border-radius: 5px;
+}
 .frictionRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 18px;
+  background: grey;
+  border: 1px solid #555555;
+  cursor: pointer;
+}
+.CORRange::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 8px;

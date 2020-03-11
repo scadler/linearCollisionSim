@@ -12,6 +12,8 @@ const status = {
     passCounter: 0,
     blueMultiplierCheck : 0,
     blueMultiplier : 0,
+    CORCheck : 1,
+    COR : 0,
 }
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
@@ -120,6 +122,7 @@ function updateText(){
     $("#whiteVRangeOutput").text($("#whiteVRange").val())
     $("#whiteMRangeOutput").text($("#whiteMRange").val())
     $("#frictionRangeOutput").text($("#frictionRange").val())
+    $("#CORRangeOutput").text($("#CORRange").val())
     $("#redMOutput").text(left.m.toFixed(2))
     $("#redVOutput").text(left.v.toFixed(3))
     $("#redKEOutput").text((0.5*left.m*(left.v*left.v)).toFixed(4))
@@ -176,19 +179,27 @@ function updateElastic(){
     }
     let closeRL = Math.sqrt((right.x - left.x)*(right.x - left.x))
     if(closeRL <= (right.radius+left.radius)){
-        right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
-        left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
+        // right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
+        // left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
+        right.v = ( ( ( right.m * right.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - right.vi ) ) ) / ( right.m + left.m ) )
+        left.v = ( ( ( left.m * left.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - left.vi ) ) ) / ( right.m + left.m ) )
+        console.log(( ( ( left.m * left.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - left.vi ) ) ) / ( right.m + left.m ) ))
+
     }
     if(status.blue === true){
         let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
         if(closeCL <= (center.radius+left.radius)){
-            center.v = (((center.vi*(center.m - left.m))/(center.m + left.m)) + (((2*left.m)/(center.m + left.m))*left.vi))
-            left.v = (((center.vi*(2*center.m))/(center.m + left.m)) + (((left.m - center.m)/(center.m + left.m))*left.vi))
+            // center.v = (((center.vi*(center.m - left.m))/(center.m + left.m)) + (((2*left.m)/(center.m + left.m))*left.vi))
+            // left.v = (((center.vi*(2*center.m))/(center.m + left.m)) + (((left.m - center.m)/(center.m + left.m))*left.vi))
+            center.v = ( ( ( center.m * center.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - center.vi ) ) ) / ( center.m + left.m ) )
+            left.v = ( ( ( left.m * left.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - left.vi ) ) ) / ( center.m + left.m ) )
         }
         let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
         if(closeCR <= (center.radius+right.radius)){
-            center.v = (((center.vi*(center.m - right.m))/(center.m + right.m)) + (((2*right.m)/(center.m + right.m))*right.vi))
-            right.v = (((center.vi*(2*center.m))/(center.m + right.m)) + (((right.m - center.m)/(center.m + right.m))*right.vi))
+            // center.v = (((center.vi*(center.m - right.m))/(center.m + right.m)) + (((2*right.m)/(center.m + right.m))*right.vi))
+            // right.v = (((center.vi*(2*center.m))/(center.m + right.m)) + (((right.m - center.m)/(center.m + right.m))*right.vi))
+            center.v = ( ( ( center.m * center.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - center.vi ) ) ) / ( center.m + right.m ) )
+            right.v = ( ( ( right.m * right.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - right.vi ) ) ) / ( center.m + right.m ) )
         }
     }
 }
@@ -210,6 +221,7 @@ $("#restart").click(function(){
     if(status.xCoorClose === false){
         status.blue = status.blueCheck
         status.blueMultiplier = status.blueMultiplierCheck
+        status.COR = $("#CORRange").val()
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())
         left.x = Number($("#redXCoor").val())

@@ -18,6 +18,7 @@ const status = {
     RL : false,
     CL : false,
     CRL : false,
+    order : [],
 }
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
@@ -153,15 +154,50 @@ function updateInelastic(a,b){
     }
 }
 function updateInelasticAll(a,b,c){
-    if(a.x > 500){
-        //the particles are on the right
-        
+    if(status.order.length !== 3){
+    if( (a.x > b.x) && (a.x > c.x) ){
+        if(b.x > c.x){
+            status.order=[a, b, c]
+        }else{
+            status.order=[a, c, b]
+        }
     }
-    b.v = -b.v
-    if(a.x < b.x){
-        b.x = a.x + a.radius + b.radius + 0.1
+    else if( (c.x > a.x) && (c.x > b.x) ){
+        if(a.x > b.x){
+            status.order=[c, a, b]
+        }else{
+            status.order=[c, b, a]
+        }
+    }
+    else if( (b.x > a.x) && (b.x > c.x) ){
+        if(a.x > c.x){
+            status.order=[b, a, c]
+        }else{
+            status.order=[b, c, a]
+        }
+    }
+    front = status.order[0]
+    mid = status.order[1]
+    last = status.order[2]
+}
+    if(a.x > 500){
+        front = status.order[0]
+        mid = status.order[1]
+        last = status.order[2]
+        front.v = -front.v
+        mid.v = front.v
+        last.v = front.v
+        mid.x = front.x - front.radius - mid.radius - 0.1
+        last.x = mid.x - mid.radius - last.x
     }else{
-        b.x = a.x - a.radius - b.radius - 0.1
+        front = status.order[2]
+        mid = status.order[1]
+        last = status.order[0]
+        front.v = -front.v
+        mid.v = -mid.v
+        last.v = -last.v
+        mid.x = front.x + front.radius + mid.radius + 0.1
+        last.x = mid.x + mid.radius + last.radius 
     }
 }
 function updateElastic(){
@@ -191,16 +227,11 @@ function updateElastic(){
         else if(right.x - right.radius < 0){
             right.x = right.radius
         }
-        if(status.RL === true){
+        if(status.CRL === true){
+            updateInelasticAll(right,center,left)
+        }
+        else if(status.RL === true){
             updateInelastic(right,left)
-            // if(right.x < left.x){
-            //     left.v = -left.v
-            //     left.x = right.x + right.radius + left.radius + 0.1
-            //  }else{
-            //     left.v = -left.v
-            //     left.x = right.x - left.radius - right.radius - 0.1
-            //     console.log("A")
-            // }
         }
         else if(status.CR === true){
             updateInelastic(right,center)
@@ -214,18 +245,14 @@ function updateElastic(){
         else if(left.x - left.radius < 0){
             left.x = left.radius
         }
+        if(status.CRL === true){
+            updateInelasticAll(right,center,left)
+        }
         if(status.CL === true){
             updateInelastic(left,center)
         }
         else if(status.RL === true){
              updateInelastic(left,right)
-            // if(left.x < right.x){
-            //     right.v = -right.v
-            //     right.x = left.x + left.radius + right.radius + 0.1
-            //  }else{
-            //     right.v = -right.v
-            //     right.x = left.x - left.radius - right.radius - 0.1
-            // }
         }
     }
     if( center.x + center.radius > canvas.width || center.x - center.radius < 0){
@@ -236,15 +263,15 @@ function updateElastic(){
         else if(center.x - center.radius < 0){
             center.x = center.radius
         }
-        if(status.CL === true){
+        if(status.CRL === true){
+            updateInelasticAll(right,center,left)
+        }
+        else if(status.CL === true){
             updateInelastic(center,left)
         }
         else if(status.CR === true){
             updateInelastic(center,right)
-        }
-        else if(status.CLR === true){
-
-        }
+        } 
     }
     let closeRL = Math.sqrt((right.x - left.x)*(right.x - left.x))
     if(closeRL <= (right.radius+left.radius)){
@@ -302,6 +329,7 @@ $("#restart").click(function(){
         status.CRL = false;
         status.blue = status.blueCheck
         status.blueMultiplier = status.blueMultiplierCheck
+        status.order = []
         status.COR = $("#CORRange").val()
         right.x = Number($("#whiteXCoor").val())
         center.x = Number($("#blueXCoor").val())

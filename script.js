@@ -14,6 +14,9 @@ const status = {
     blueMultiplier : 0,
     CORCheck : 1,
     COR : 0,
+    CR : false,
+    RL : false,
+    CL : false,
 }
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
@@ -164,11 +167,37 @@ function updateElastic(){
         if(right.x + right.radius > canvas.width){
             right.x = canvas.width - right.radius;
         }
+        if(status.RL === true){
+            if(right.x < left.x){
+                left.v = -left.v
+                left.x = right.x + right.radius + left.radius + 0.1
+             }else{
+                left.v = -left.v
+                left.x = right.x - left.radius - right.radius - 0.1
+                console.log("A")
+            }
+        }
+        if(status.CR === true){
+            center.v = - center.v
+        }
     }
     if( left.x + left.radius > canvas.width || left.x - left.radius < 0){
         left.v = - left.v;
         if(left.x + left.radius > canvas.width){
             left.x = canvas.width - left.radius;
+        }
+        if(status.CL === true){
+            center.v = - center.v
+        }
+        if(status.RL === true){
+            
+            if(left.x < right.x){
+                right.v = -right.v
+                right.x = left.x + left.radius + right.radius + 0.1
+             }else{
+                right.v = -right.v
+                right.x = left.x - left.radius - right.radius - 0.1
+            }
         }
     }
     if( center.x + center.radius > canvas.width || center.x - center.radius < 0){
@@ -176,30 +205,41 @@ function updateElastic(){
         if(center.x + center.radius > canvas.width){
             center.x = canvas.width - center.radius;
         }
+        if(status.CL === true){
+            left.v = -left.v
+        }
+        if(status.CR === true){
+            right.v = -right.v
+        }
     }
     let closeRL = Math.sqrt((right.x - left.x)*(right.x - left.x))
     if(closeRL <= (right.radius+left.radius)){
-        // right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
-        // left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
         right.v = ( ( ( right.m * right.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - right.vi ) ) ) / ( right.m + left.m ) )
         left.v = ( ( ( left.m * left.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - left.vi ) ) ) / ( right.m + left.m ) )
-        console.log(( ( ( left.m * left.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - left.vi ) ) ) / ( right.m + left.m ) ))
+        if(right.v === left.v){
+            console.log("RL")
+            status.RL = true;
+        }
 
     }
     if(status.blue === true){
         let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
         if(closeCL <= (center.radius+left.radius)){
-            // center.v = (((center.vi*(center.m - left.m))/(center.m + left.m)) + (((2*left.m)/(center.m + left.m))*left.vi))
-            // left.v = (((center.vi*(2*center.m))/(center.m + left.m)) + (((left.m - center.m)/(center.m + left.m))*left.vi))
             center.v = ( ( ( center.m * center.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - center.vi ) ) ) / ( center.m + left.m ) )
             left.v = ( ( ( left.m * left.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - left.vi ) ) ) / ( center.m + left.m ) )
+            if(center.v === left.v){
+            console.log("CL")
+            status.CL = true;
+        }
         }
         let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
         if(closeCR <= (center.radius+right.radius)){
-            // center.v = (((center.vi*(center.m - right.m))/(center.m + right.m)) + (((2*right.m)/(center.m + right.m))*right.vi))
-            // right.v = (((center.vi*(2*center.m))/(center.m + right.m)) + (((right.m - center.m)/(center.m + right.m))*right.vi))
             center.v = ( ( ( center.m * center.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - center.vi ) ) ) / ( center.m + right.m ) )
             right.v = ( ( ( right.m * right.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - right.vi ) ) ) / ( center.m + right.m ) )
+            if(center.v === right.v){
+            console.log("CR")
+            status.CR = true;
+        }
         }
     }
 }
@@ -219,6 +259,9 @@ document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
 $("#restart").click(function(){
     if(status.xCoorClose === false){
+        status.CR = false;
+        status.CL = false;
+        status.RL = false;
         status.blue = status.blueCheck
         status.blueMultiplier = status.blueMultiplierCheck
         status.COR = $("#CORRange").val()

@@ -17,6 +17,7 @@ const status = {
     CR : false,
     RL : false,
     CL : false,
+    CRL : false,
 }
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
@@ -143,6 +144,26 @@ function updateText(){
     $("#netKEOutput").text((Number($("#redKEOutput").text())+Number($("#blueKEOutput").text())+Number($("#whiteKEOutput").text())).toFixed(4))
     $("#netPOutput").text((Number($("#redPOutput").text())+Number($("#bluePOutput").text())+Number($("#whitePOutput").text())).toFixed(4))
 }
+function updateInelastic(a,b){
+    b.v = -b.v
+    if(a.x < b.x){
+        b.x = a.x + a.radius + b.radius + 0.1
+    }else{
+        b.x = a.x - a.radius - b.radius - 0.1
+    }
+}
+function updateInelasticAll(a,b,c){
+    if(a.x > 500){
+        //the particles are on the right
+        
+    }
+    b.v = -b.v
+    if(a.x < b.x){
+        b.x = a.x + a.radius + b.radius + 0.1
+    }else{
+        b.x = a.x - a.radius - b.radius - 0.1
+    }
+}
 function updateElastic(){
     let leftDirection = (left.v > 0) ? 1 : -1 
     let rightDirection = (right.v > 0) ? 1 : -1 
@@ -167,21 +188,22 @@ function updateElastic(){
         if(right.x + right.radius > canvas.width){
             right.x = canvas.width - right.radius;
         }
-        if(right.x - right.radius < 0){
+        else if(right.x - right.radius < 0){
             right.x = right.radius
         }
         if(status.RL === true){
-            if(right.x < left.x){
-                left.v = -left.v
-                left.x = right.x + right.radius + left.radius + 0.1
-             }else{
-                left.v = -left.v
-                left.x = right.x - left.radius - right.radius - 0.1
-                console.log("A")
-            }
+            updateInelastic(right,left)
+            // if(right.x < left.x){
+            //     left.v = -left.v
+            //     left.x = right.x + right.radius + left.radius + 0.1
+            //  }else{
+            //     left.v = -left.v
+            //     left.x = right.x - left.radius - right.radius - 0.1
+            //     console.log("A")
+            // }
         }
-        if(status.CR === true){
-            center.v = - center.v
+        else if(status.CR === true){
+            updateInelastic(right,center)
         }
     }
     if( left.x + left.radius > canvas.width || left.x - left.radius < 0){
@@ -189,21 +211,21 @@ function updateElastic(){
         if(left.x + left.radius > canvas.width){
             left.x = canvas.width - left.radius;
         }
-        if(left.x - left.radius < 0){
+        else if(left.x - left.radius < 0){
             left.x = left.radius
         }
         if(status.CL === true){
-            center.v = - center.v
+            updateInelastic(left,center)
         }
-        if(status.RL === true){
-            
-            if(left.x < right.x){
-                right.v = -right.v
-                right.x = left.x + left.radius + right.radius + 0.1
-             }else{
-                right.v = -right.v
-                right.x = left.x - left.radius - right.radius - 0.1
-            }
+        else if(status.RL === true){
+             updateInelastic(left,right)
+            // if(left.x < right.x){
+            //     right.v = -right.v
+            //     right.x = left.x + left.radius + right.radius + 0.1
+            //  }else{
+            //     right.v = -right.v
+            //     right.x = left.x - left.radius - right.radius - 0.1
+            // }
         }
     }
     if( center.x + center.radius > canvas.width || center.x - center.radius < 0){
@@ -211,14 +233,17 @@ function updateElastic(){
         if(center.x + center.radius > canvas.width){
             center.x = canvas.width - center.radius;
         }
-        if(center.x - center.radius < 0){
+        else if(center.x - center.radius < 0){
             center.x = center.radius
         }
         if(status.CL === true){
-            left.v = -left.v
+            updateInelastic(center,left)
         }
-        if(status.CR === true){
-            right.v = -right.v
+        else if(status.CR === true){
+            updateInelastic(center,right)
+        }
+        else if(status.CLR === true){
+
         }
     }
     let closeRL = Math.sqrt((right.x - left.x)*(right.x - left.x))
@@ -226,7 +251,6 @@ function updateElastic(){
         right.v = ( ( ( right.m * right.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - right.vi ) ) ) / ( right.m + left.m ) )
         left.v = ( ( ( left.m * left.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - left.vi ) ) ) / ( right.m + left.m ) )
         if(right.v === left.v){
-            console.log("RL")
             status.RL = true;
         }
 
@@ -237,7 +261,6 @@ function updateElastic(){
             center.v = ( ( ( center.m * center.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - center.vi ) ) ) / ( center.m + left.m ) )
             left.v = ( ( ( left.m * left.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - left.vi ) ) ) / ( center.m + left.m ) )
             if(center.v === left.v){
-            console.log("CL")
             status.CL = true;
         }
         }
@@ -246,10 +269,15 @@ function updateElastic(){
             center.v = ( ( ( center.m * center.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - center.vi ) ) ) / ( center.m + right.m ) )
             right.v = ( ( ( right.m * right.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - right.vi ) ) ) / ( center.m + right.m ) )
             if(center.v === right.v){
-            console.log("CR")
             status.CR = true;
         }
         }
+    }
+    if((status.RL === true && status.CR === true )||(status.CR === true && status.CL === true )||(status.RL === true && status.CL === true )){
+        status.CRL = true;
+        status.RL = false;
+        status.CR = false;
+        status.CL = false;
     }
 }
 function render(){
@@ -271,6 +299,7 @@ $("#restart").click(function(){
         status.CR = false;
         status.CL = false;
         status.RL = false;
+        status.CRL = false;
         status.blue = status.blueCheck
         status.blueMultiplier = status.blueMultiplierCheck
         status.COR = $("#CORRange").val()

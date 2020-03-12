@@ -167,6 +167,9 @@ function updateElastic(){
         if(right.x + right.radius > canvas.width){
             right.x = canvas.width - right.radius;
         }
+        if(right.x - right.radius < 0){
+            right.x = right.radius
+        }
         if(status.RL === true){
             if(right.x < left.x){
                 left.v = -left.v
@@ -186,6 +189,9 @@ function updateElastic(){
         if(left.x + left.radius > canvas.width){
             left.x = canvas.width - left.radius;
         }
+        if(left.x - left.radius < 0){
+            left.x = left.radius
+        }
         if(status.CL === true){
             center.v = - center.v
         }
@@ -204,6 +210,9 @@ function updateElastic(){
         center.v = - center.v;
         if(center.x + center.radius > canvas.width){
             center.x = canvas.width - center.radius;
+        }
+        if(center.x - center.radius < 0){
+            center.x = center.radius
         }
         if(status.CL === true){
             left.v = -left.v
@@ -274,9 +283,9 @@ $("#restart").click(function(){
         center.m = Number($("#blueMRangeOutput").text())
         left.v = Number($("#redVRangeOutput").text())
         left.m = Number($("#redMRangeOutput").text())
-        right.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)
-        center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)
-        left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)
+        right.radius = 20*Math.sqrt(Number($("#whiteMRangeOutput").text())/Math.PI)+1
+        center.radius = 20*Math.sqrt(Number($("#blueMRangeOutput").text())/Math.PI)+1
+        left.radius = 20*Math.sqrt(Number($("#redMRangeOutput").text())/Math.PI)+1
     }
 })
 var i = 0;

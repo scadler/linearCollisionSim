@@ -19,6 +19,7 @@ const status = {
     CL : false,
     CRL : false,
     order : [],
+    i : 0,
 }
 function drawCircle(x, y, r, color){
     context.fillStyle = color;
@@ -153,7 +154,8 @@ function updateInelastic(a,b){
         b.x = a.x - a.radius - b.radius - 0.1
     }
 }
-function updateInelasticAll(a,b,c){
+function updateInelasticAll(a,b,c,d){
+    if( status.i === 0){
     if(status.order.length !== 3){
     if( (a.x > b.x) && (a.x > c.x) ){
         if(b.x > c.x){
@@ -180,24 +182,30 @@ function updateInelasticAll(a,b,c){
     mid = status.order[1]
     last = status.order[2]
 }
+status.i = 1;
+    }
     if(a.x > 500){
         front = status.order[0]
         mid = status.order[1]
         last = status.order[2]
-        front.v = -front.v
-        mid.v = front.v
-        last.v = front.v
+        console.log(front.color +"1a")
+        console.log(mid.color +"2a")
+        console.log(last.color +"3a")
+        front.v = -d
+        mid.v = -d
+        last.v = -d
         mid.x = front.x - front.radius - mid.radius - 0.1
-        last.x = mid.x - mid.radius - last.x
-    }else{
+        last.x = mid.x - mid.radius - last.radius
+    }else if(a.x < 500){
         front = status.order[2]
         mid = status.order[1]
         last = status.order[0]
-        front.v = -front.v
-        mid.v = -mid.v
-        last.v = -last.v
-        mid.x = front.x + front.radius + mid.radius + 0.1
-        last.x = mid.x + mid.radius + last.radius 
+        front.v = -d
+        mid.v = -d
+        last.v = -d
+        last.x = front.radius + front.radius + mid.radius + mid.radius + last.radius + 0.3;
+        mid.x = front.radius + front.radius + mid.radius + 0.2;
+        front.x = front.radius + 0.1;
     }
 }
 function updateElastic(){
@@ -228,7 +236,7 @@ function updateElastic(){
             right.x = right.radius
         }
         if(status.CRL === true){
-            updateInelasticAll(right,center,left)
+            updateInelasticAll(right,center,left,right.v)
         }
         else if(status.RL === true){
             updateInelastic(right,left)
@@ -246,7 +254,7 @@ function updateElastic(){
             left.x = left.radius
         }
         if(status.CRL === true){
-            updateInelasticAll(right,center,left)
+            updateInelasticAll(right,center,left,right.v)
         }
         if(status.CL === true){
             updateInelastic(left,center)
@@ -264,7 +272,7 @@ function updateElastic(){
             center.x = center.radius
         }
         if(status.CRL === true){
-            updateInelasticAll(right,center,left)
+            updateInelasticAll(right,center,left,right.v)
         }
         else if(status.CL === true){
             updateInelastic(center,left)
@@ -323,6 +331,7 @@ document.addEventListener("mousedown",checkXCoorSliders());
 setInterval(game,);
 $("#restart").click(function(){
     if(status.xCoorClose === false){
+        status.i = 0;
         status.CR = false;
         status.CL = false;
         status.RL = false;

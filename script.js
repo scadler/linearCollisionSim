@@ -120,6 +120,20 @@ const right = {
     color : "White",
     a : 0,
 }
+function collision(a,b){
+    a.v = ( ( ( a.m * a.vi ) + ( b.m * b.vi ) + ( b.m * status.COR * ( b.vi - a.vi ) ) ) / ( a.m + b.m) )
+    b.v = ( ( ( b.m * b.vi ) + ( a.m * a.vi ) + ( a.m * status.COR * ( a.vi - b.vi ) ) ) / ( a.m + b.m) )
+}
+function overlap(a,b){
+    if(Math.abs(a.x-b.x)< a.radius+b.radius){
+        if(a.x > b.x){
+            b.x = a.x - a.radius - b.radius
+        }
+        else{
+             a.x = b.x - b.radius - a.radius
+        }
+    }
+}
 function updateText(){
     $("#redVRangeOutput").text($("#redVRange").val())
     $("#redMRangeOutput").text($("#redMRange").val())
@@ -284,26 +298,22 @@ function updateElastic(){
     }
     let closeRL = Math.sqrt((right.x - left.x)*(right.x - left.x))
     if(closeRL <= (right.radius+left.radius)){
-        right.v = ( ( ( right.m * right.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - right.vi ) ) ) / ( right.m + left.m ) )
-        left.v = ( ( ( left.m * left.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - left.vi ) ) ) / ( right.m + left.m ) )
+            collision(right,left)
         if(right.v === left.v){
             status.RL = true;
         }
-
     }
     if(status.blue === true){
         let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
         if(closeCL <= (center.radius+left.radius)){
-            center.v = ( ( ( center.m * center.vi ) + ( left.m * left.vi ) + ( left.m * status.COR * ( left.vi - center.vi ) ) ) / ( center.m + left.m ) )
-            left.v = ( ( ( left.m * left.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - left.vi ) ) ) / ( center.m + left.m ) )
+            collision(center,left)
             if(center.v === left.v){
-            status.CL = true;
-        }
+                status.CL = true;
+            }
         }
         let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
         if(closeCR <= (center.radius+right.radius)){
-            center.v = ( ( ( center.m * center.vi ) + ( right.m * right.vi ) + ( right.m * status.COR * ( right.vi - center.vi ) ) ) / ( center.m + right.m ) )
-            right.v = ( ( ( right.m * right.vi ) + ( center.m * center.vi ) + ( center.m * status.COR * ( center.vi - right.vi ) ) ) / ( center.m + right.m ) )
+            collision(center,right)
             if(center.v === right.v){
             status.CR = true;
         }

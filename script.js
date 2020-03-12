@@ -191,18 +191,19 @@ status.i = 1;
         console.log(front.color +"1a")
         console.log(mid.color +"2a")
         console.log(last.color +"3a")
-        front.v = -d
-        mid.v = -d
-        last.v = -d
-        mid.x = front.x - front.radius - mid.radius - 0.1
-        last.x = mid.x - mid.radius - last.radius
+        front.v = -(Math.abs(d))
+        mid.v = -(Math.abs(d))
+        last.v = -(Math.abs(d))
+        front.x = canvas.width - front.radius - 0.1
+        mid.x = canvas.width - front.radius - front.radius - mid.radius - 0.2
+        last.x = canvas.width - front.radius - front.radius - mid.radius - mid.radius - last.radius - 0.3
     }else if(a.x < 500){
         front = status.order[2]
         mid = status.order[1]
         last = status.order[0]
-        front.v = -d
-        mid.v = -d
-        last.v = -d
+        front.v = Math.abs(d)
+        mid.v = Math.abs(d)
+        last.v = Math.abs(d)
         last.x = front.radius + front.radius + mid.radius + mid.radius + last.radius + 0.3;
         mid.x = front.radius + front.radius + mid.radius + 0.2;
         front.x = front.radius + 0.1;

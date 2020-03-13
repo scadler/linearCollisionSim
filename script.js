@@ -108,7 +108,7 @@ const combined = {
     v : 0,
     m: 1,
     color : "#cccccc",
-    a : 0,
+    status : false,
 }
 const left = {
     x : canvas.width/4,
@@ -141,28 +141,40 @@ const right = {
     a : 0,
 }
 
-function combinedParticle(c1,c2,m1,m2){
-    m3 = m1+m2
-    c1R = parseInt( c1.substring(0,2), 16)
-    console.log(c1R)
-    c1G = parseInt( c1.substring(2,4), 16)
-    console.log(c1G)
-    c1B = parseInt( c1.substring(4,6), 16)
-    console.log(c1B)
-    c2R = parseInt( c2.substring(0,2), 16)
-    console.log(c2R)
-    c2G = parseInt( c2.substring(2,4), 16)
-    console.log(c2G)
-    c2B = parseInt( c2.substring(4,6), 16)
-    console.log(c2B)
-    c3R = (c1R * (m1/(m3))) + (c2R * (m2/(m3)))
-    c3G = (c1G * (m1/(m3))) + (c2G * (m2/(m3)))
-    c3B = (c1B * (m1/(m3))) + (c2B * (m2/(m3)))
-    c3 = "#"+c3R.toString(16)+c3G.toString(16)+c3B.toString(16)
-    console.log(c3)
-
+function combinedParticle(c1,c2,m1,m2,v,x1,x2){
+    if(combined.status === true && status.CRL === false){
+        m3 = m1+m2
+        c1R = parseInt( c1.substring(0,2), 16)
+        console.log(c1R)
+        c1G = parseInt( c1.substring(2,4), 16)
+        console.log(c1G)
+        c1B = parseInt( c1.substring(4,6), 16)
+        console.log(c1B)
+        c2R = parseInt( c2.substring(0,2), 16)
+        console.log(c2R)
+        c2G = parseInt( c2.substring(2,4), 16)
+        console.log(c2G)
+        c2B = parseInt( c2.substring(4,6), 16)
+        console.log(c2B)
+        c3R = ((c1R * (m1/(m3))) + (c2R * (m2/(m3))) < 1) ? "0"+0 : Math.floor((c1R * (m1/(m3))) + (c2R * (m2/(m3))))
+        console.log(c3R)
+        c3G = ((c1G * (m1/(m3))) + (c2G * (m2/(m3))) < 1) ? "0"+0 : Math.floor((c1G * (m1/(m3))) + (c2G * (m2/(m3))))
+        console.log(c3G)
+        c3B = ((c1B * (m1/(m3))) + (c2B * (m2/(m3))) < 1) ? "0"+0 : Math.floor((c1B * (m1/(m3))) + (c2B * (m2/(m3))))
+        console.log(c3B)
+        c3 = "#"+c3R.toString(16)+c3G.toString(16)+c3B.toString(16)
+        x3 = (x1 * (m1/m3)) + (x2 * (m2/m3))
+        combined.color = c3
+        combined.v = v
+        combined.radius = 20*Math.sqrt(Number(m3)/Math.PI)+1
+        combined.x = x3
+        combined.draw = true
+        console.log(combined.color)
+    }
+    else{
+        
+    }
 }
-combinedParticle("FF0000","0000FF",1,2)
 function collision(a,b){
     a.v = ( ( ( a.m * a.vi ) + ( b.m * b.vi ) + ( b.m * status.COR * ( b.vi - a.vi ) ) ) / ( a.m + b.m) )
     b.v = ( ( ( b.m * b.vi ) + ( a.m * a.vi ) + ( a.m * status.COR * ( a.vi - b.vi ) ) ) / ( a.m + b.m) )
@@ -354,7 +366,10 @@ function updateElastic(){
         }
         if(right.v === left.v){
             status.RL = true;
-            //
+            combined.status = true;
+            combinedParticle(right.color,left.color,right.m,left.m,right.v,right.x,left.x)
+            left.x = 2000
+            right.x = 2000
         }
     }
     if(status.blue === true){
@@ -369,6 +384,10 @@ function updateElastic(){
         }
             if(center.v === left.v){
                 status.CL = true;
+                combined.status = true;
+                combinedParticle(center.color,left.color,center.m,left.m,center.v,center.x,left.x)
+                left.x = 2000
+                center.x = 2000
             }
         }
         let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
@@ -382,6 +401,10 @@ function updateElastic(){
         }
             if(center.v === right.v){
             status.CR = true;
+            combined.status = true;
+            combinedParticle(center.color,right.color,center.m,right.m,center.v,center.x,right.x)
+            center.x = 2000
+            right.x = 2000
         }
         }
     }
@@ -397,6 +420,7 @@ drawRect(0, 0, canvas.width, canvas.height, "black");
 drawCircle(left.x, left.y, left.radius, left.color)
 drawCircle(right.x, right.y, right.radius, right.color)
 drawCircleBlue(center.x, center.y, center.radius, center.color, status.blue)
+drawCircleCombined(combined.x, combined.y, combined.radius, combined.color)
 updateText()
 }
 function game(){

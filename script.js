@@ -28,6 +28,15 @@ function drawCircle(x, y, r, color){
     context.closePath();
     context.fill();
 }
+function drawCircleCombined(x, y, r, color){
+    if(combined.draw === true){
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(x, y, r, 0, Math.PI*2, false);
+    context.closePath();
+    context.fill();
+    }
+}
 function drawCircleBlue(x, y, r, color, check){
     if(check === true){
     context.fillStyle = color;
@@ -90,6 +99,17 @@ function checkXCoorSliders(){
         status.xCoorClose = false;
     }
 }
+const combined = {
+    draw : false,
+    x : canvas.width/4,
+    y : canvas.height/2,
+    radius : 10,
+    vi : 0,
+    v : 0,
+    m: 1,
+    color : "#cccccc",
+    a : 0,
+}
 const left = {
     x : canvas.width/4,
     y : canvas.height/2,
@@ -97,7 +117,7 @@ const left = {
     vi : 0,
     v : 0.5,
     m: 3,
-    color : "Red",
+    color : "#FF0000",
     a : 0,
 }
 const center = {
@@ -107,7 +127,7 @@ const center = {
     vi : 0,
     v : 0,
     m: 5,
-    color : "Blue",
+    color : "#0000FF",
     a : 0,
 }
 const right = {
@@ -117,12 +137,39 @@ const right = {
     vi : 0,
     v : -0.05,
     m: 1,
-    color : "White",
+    color : "#FFFFFF",
     a : 0,
 }
+
+function combinedParticle(c1,c2,m1,m2){
+    m3 = m1+m2
+    c1R = parseInt( c1.substring(0,2), 16)
+    console.log(c1R)
+    c1G = parseInt( c1.substring(2,4), 16)
+    console.log(c1G)
+    c1B = parseInt( c1.substring(4,6), 16)
+    console.log(c1B)
+    c2R = parseInt( c2.substring(0,2), 16)
+    console.log(c2R)
+    c2G = parseInt( c2.substring(2,4), 16)
+    console.log(c2G)
+    c2B = parseInt( c2.substring(4,6), 16)
+    console.log(c2B)
+    c3R = (c1R * (m1/(m3))) + (c2R * (m2/(m3)))
+    c3G = (c1G * (m1/(m3))) + (c2G * (m2/(m3)))
+    c3B = (c1B * (m1/(m3))) + (c2B * (m2/(m3)))
+    c3 = "#"+c3R.toString(16)+c3G.toString(16)+c3B.toString(16)
+    console.log(c3)
+
+}
+combinedParticle("FF0000","0000FF",1,2)
 function collision(a,b){
     a.v = ( ( ( a.m * a.vi ) + ( b.m * b.vi ) + ( b.m * status.COR * ( b.vi - a.vi ) ) ) / ( a.m + b.m) )
     b.v = ( ( ( b.m * b.vi ) + ( a.m * a.vi ) + ( a.m * status.COR * ( a.vi - b.vi ) ) ) / ( a.m + b.m) )
+}
+function collisionCOR(a,b,c){
+    a.v = ( ( ( a.m * a.vi ) + ( b * b.vi ) + ( b * status.COR * ( b.vi - a.vi ) ) ) / ( a.m + b) )
+    b.v = ( ( ( b * b.vi ) + ( a.m * a.vi ) + ( a.m * status.COR * ( a.vi - b.vi ) ) ) / ( a.m + b) )
 }
 function overlap(a,b){
     if(Math.abs(a.x-b.x)< a.radius+b.radius){
@@ -298,22 +345,41 @@ function updateElastic(){
     }
     let closeRL = Math.sqrt((right.x - left.x)*(right.x - left.x))
     if(closeRL <= (right.radius+left.radius)){
+        if(status.CL !== true && status.CR !== true){
             collision(right,left)
+        }
+        else{
+            collisionCOR(right,left,center)
+            collisionCOR(left,right,center)
+        }
         if(right.v === left.v){
             status.RL = true;
+            //
         }
     }
     if(status.blue === true){
         let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
         if(closeCL <= (center.radius+left.radius)){
+            if(status.RL !== true && status.CR !== true){
             collision(center,left)
+        }
+        else{
+            collisionCOR(center,left,right)
+            collisionCOR(left,center,right)
+        }
             if(center.v === left.v){
                 status.CL = true;
             }
         }
         let closeCR = Math.sqrt((center.x - right.x)*(center.x - right.x))
         if(closeCR <= (center.radius+right.radius)){
+            if(status.RL !== true && status.CL !== true){
             collision(center,right)
+        }
+        else{
+            collisionCOR(center,right,left)
+            collisionCOR(right,center,left)
+        }
             if(center.v === right.v){
             status.CR = true;
         }

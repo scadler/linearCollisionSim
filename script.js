@@ -92,6 +92,7 @@ const left = {
     m: 3,
     color : "Red",
     a : 0,
+    initial: 250,
 }
 const center = {
     x : canvas.width/2,
@@ -102,6 +103,7 @@ const center = {
     m: 5,
     color : "Blue",
     a : 0,
+    initial: 500,
 }
 const right = {
     x : 3*canvas.width/4,
@@ -112,6 +114,7 @@ const right = {
     m: 1,
     color : "White",
     a : 0,
+    initial: 750,
 }
 function updateText(){
     $("#redVRangeOutput").text($("#redVRange").val())
@@ -179,10 +182,18 @@ function updateElastic(){
     if(closeRL <= (right.radius+left.radius)){
         right.v = (((right.vi*(right.m - left.m))/(right.m + left.m)) + (((2*left.m)/(right.m + left.m))*left.vi))
         left.v = (((right.vi*(2*right.m))/(right.m + left.m)) + (((left.m - right.m)/(right.m + left.m))*left.vi))
+        if(left.initial < right.initial){
+            var a = right.x
+            left.x = a - right.radius - left.radius
+            right.x = left.x + left.radius + right.radius
+        }
+        if(left.initial > right.initial){
+            console.log("RL")
+        }
     }
     if(status.blue === true){
         let closeCL = Math.sqrt((center.x - left.x)*(center.x - left.x))
-        if(closeCL <= (center.radius+left.radius)){
+        if(closeCL <= (center.radius+left.radius )){
             center.v = (((center.vi*(center.m - left.m))/(center.m + left.m)) + (((2*left.m)/(center.m + left.m))*left.vi))
             left.v = (((center.vi*(2*center.m))/(center.m + left.m)) + (((left.m - center.m)/(center.m + left.m))*left.vi))
         }
